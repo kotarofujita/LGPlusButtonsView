@@ -116,6 +116,9 @@
 
     [self.navigationController.view addSubview:_plusButtonsViewMain];
 
+    // Enable Tap gesture recognizer on descriptionButtons
+    [_plusButtonsViewMain setDescriptionsTap];
+    
     // -----
 
     _plusButtonsViewNavBar = [LGPlusButtonsView plusButtonsViewWithNumberOfButtons:3

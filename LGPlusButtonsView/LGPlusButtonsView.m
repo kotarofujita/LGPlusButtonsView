@@ -46,7 +46,7 @@
 
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
 {
-    //NSLog(@"\nself = %@\nsuper = %@\nsubviews = %@\nsupersubviews = %@\n\n", self, [super hitTest:point withEvent:event], self.subviews, self.superview.subviews);
+    NSLog(@"\nself = %@\nsuper = %@\nsubviews = %@\nsupersubviews = %@\n\n", self, [super hitTest:point withEvent:event], self.subviews, self.superview.subviews);
 
     UIView *view = nil;
 
@@ -309,7 +309,7 @@ typedef NS_ENUM(NSUInteger, LGPlusButtonDescriptionsPosition)
 
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
 {
-    //NSLog(@"\nself = %@\nsuper = %@\nsubviews = %@\nsupersubviews = %@\n\n", self, [super hitTest:point withEvent:event], self.subviews, self.superview.subviews);
+    NSLog(@"\nself = %@\nsuper = %@\nsubviews = %@\nsupersubviews = %@\n\n", self, [super hitTest:point withEvent:event], self.subviews, self.superview.subviews);
 
     UIView *view = nil;
 
@@ -321,6 +321,15 @@ typedef NS_ENUM(NSUInteger, LGPlusButtonDescriptionsPosition)
         if (view) break;
     }
 
+    if(!view){
+        for (LGPlusButtonDescription *description in _descriptionsArray)
+        {
+            CGPoint newPoint = [self convertPoint:point toView:description];
+            view = [description hitTest:newPoint withEvent:event];
+            if (view) break;
+        }
+    }
+    
     if (!view && _coverColor && !_coverView.isHidden)
     {
         CGPoint newPoint = [self convertPoint:point toView:_coverView];
@@ -757,6 +766,20 @@ typedef NS_ENUM(NSUInteger, LGPlusButtonDescriptionsPosition)
 {
     for (LGPlusButtonDescription *description in _descriptionsArray)
         description.backgroundColor = backgroundColor;
+}
+
+- (void)setDescriptionsTap
+{
+    for (NSUInteger i=0; i<_descriptionsArray.count; i++)
+    {
+        LGPlusButtonDescription *description = _descriptionsArray[i];
+        [description setUserInteractionEnabled:true];
+
+        UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(descriptionButtonAction:)];
+        description.tag = i;
+        //[tapGesture.view setTag:i];
+        [description addGestureRecognizer:tapGesture];
+    }
 }
 
 #pragma mark //
@@ -1258,6 +1281,13 @@ typedef NS_ENUM(NSUInteger, LGPlusButtonDescriptionsPosition)
         [self hideAnimated:YES completionHandler:nil];
 }
 
+- (void)descriptionButtonAction:(UITapGestureRecognizer *)recognizer{
+
+    NSUInteger index = recognizer.view.tag;
+    //NSLog(@"Description N°%i tapped", index);
+    [self buttonAction:[_buttonsArray objectAtIndex:index]];
+}
+
 - (void)buttonAction:(LGPlusButton *)button
 {
     NSUInteger index = button.tag;
@@ -1441,10 +1471,15 @@ typedef NS_ENUM(NSUInteger, LGPlusButtonDescriptionsPosition)
 
         [[NSNotificationCenter defaultCenter] postNotificationName:kLGPlusButtonsViewWillShowButtonsNotification object:self userInfo:nil];
 
-        // -----
-
         NSTimeInterval delay = _buttonsAppearingAnimationSpeed/10.f;
 
+        // Enable User interaction on descriptions label when  showing
+        for (NSUInteger i=0; i<_descriptionsArray.count; i++)
+        {
+            LGPlusButtonDescription *description = _descriptionsArray[i];
+            [description setUserInteractionEnabled:YES];
+        }
+        
         for (NSInteger i=1; i<_buttonsArray.count; i++)
         {
             LGPlusButton *button = _buttonsArray[i];
@@ -1508,6 +1543,13 @@ typedef NS_ENUM(NSUInteger, LGPlusButtonDescriptionsPosition)
 
         NSTimeInterval delay = _buttonsAppearingAnimationSpeed/10.f;
 
+        // Enable User interaction on descriptions label when hidding
+        for (NSUInteger i=0; i<_descriptionsArray.count; i++)
+        {
+            LGPlusButtonDescription *description = _descriptionsArray[i];
+            [description setUserInteractionEnabled:NO];
+        }
+        
         for (NSInteger i=1; i<_buttonsArray.count; i++)
         {
             LGPlusButton *button = _buttonsArray[i];
