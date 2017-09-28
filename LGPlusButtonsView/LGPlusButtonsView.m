@@ -780,13 +780,13 @@ typedef NS_ENUM(NSUInteger, LGPlusButtonDescriptionsPosition)
 {
     for (NSUInteger i=0; i<_descriptionsArray.count; i++)
     {
-        LGPlusButtonDescription *description = _descriptionsArray[i];
-        [description setUserInteractionEnabled:true];
+//         LGPlusButtonDescription *description = _descriptionsArray[i];
+//         [description setUserInteractionEnabled:true];
 
-        UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(descriptionButtonAction:)];
-        description.tag = i;
-        //[tapGesture.view setTag:i];
-        [description addGestureRecognizer:tapGesture];
+//         UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(descriptionButtonAction:)];
+//         description.tag = i;
+//         //[tapGesture.view setTag:i];
+//         [description addGestureRecognizer:tapGesture];
     }
 }
 
