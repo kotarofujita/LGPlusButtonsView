@@ -143,7 +143,7 @@ typedef NS_ENUM(NSUInteger, LGPlusButtonDescriptionsPosition)
 
         _contentView = [WrapperView new];
         _contentView.backgroundColor = [UIColor clearColor];
-        _contentView.userInteractionEnabled = YES;
+        _contentView.userInteractionEnabled = NO;
         [self addSubview:_contentView];
 
         _buttonsContentView = [WrapperView new];
@@ -1461,6 +1461,7 @@ typedef NS_ENUM(NSUInteger, LGPlusButtonDescriptionsPosition)
 
 - (void)showButtonsAnimated:(BOOL)animated completionHandler:(void(^)())completionHandler
 {
+    self.contentView.userInteractionEnabled = YES;
     if (self.isFirstButtonIsPlusButton)
     {
         LGPlusButton *plusButton = _buttonsArray[0];
@@ -1529,6 +1530,7 @@ typedef NS_ENUM(NSUInteger, LGPlusButtonDescriptionsPosition)
 
 - (void)hideButtonsAnimated:(BOOL)animated completionHandler:(void(^)())completionHandler
 {
+    self.contentView.userInteractionEnabled = NO;
     if (self.isFirstButtonIsPlusButton)
     {
         LGPlusButton *plusButton = _buttonsArray[0];
